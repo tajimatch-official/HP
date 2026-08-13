@@ -1,0 +1,894 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>たじまっち｜但馬の人・場所・体験に出会う地域クエスト型メディア</title>
+<meta name="description" content="但馬の「面白い」と出会い、ワクワクする繋がりをマッチングする。">
+<link rel="icon" type="image/png" href="./images/tajimatch-logo.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Shippori+Mincho:wght@400;500;600;700;800&family=Zen+Kaku+Gothic+New:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --sea-deep:#1B6FA8;
+    --sea-mid:#3FA9E0;
+    --sea-light:#BFE6F5;
+    --sand:#E4F3E1;
+    --sand-light:#F7FBF6;
+    --clay:#FF7A45;
+    --clay-dark:#E0602E;
+    --gold:#FFC94D;
+    --gold-dark:#E0A82E;
+    --moss:#4CAF50;
+    --moss-dark:#2E7D32;
+    --ink:#1F3A34;
+    --ink-soft:#4C6560;
+    --paper-line: rgba(31,58,52,0.14);
+    --radius: 2px;
+  }
+  *{box-sizing:border-box;}
+  html{scroll-behavior:smooth;}
+  body{
+    margin:0;
+    background:var(--sand-light);
+    color:var(--ink);
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    font-weight:400;
+    line-height:1.85;
+    -webkit-font-smoothing:antialiased;
+  }
+  h1,h2,h3,.mincho{
+    font-family:'Shippori Mincho', serif;
+    letter-spacing:.02em;
+  }
+  a{color:inherit;}
+  img,svg{display:block;max-width:100%;}
+  .eyebrow{
+    font-size:clamp(.66rem,2.4vw,.78rem);
+    letter-spacing:clamp(.14em,2vw,.28em);
+    font-weight:500;
+    color:var(--clay);
+    text-transform:uppercase;
+  }
+  .section-title{
+    font-family:'Shippori Mincho',serif;
+    font-size:clamp(1rem,3.2vw,1.15rem);
+    font-weight:700;
+    color:var(--ink);
+    margin:10px 0 0;
+  }
+  .thought .section-title{color:var(--sand-light);}
+  .whatis .section-title{margin-bottom:10px;}
+  .wrap{
+    max-width:1080px;
+    margin:0 auto;
+    padding:0 clamp(20px,5vw,48px);
+  }
+  section{scroll-margin-top:96px;}
+
+  /* ---------- NAV ---------- */
+  header.nav{
+    position:fixed;
+    top:0;left:0;right:0;
+    z-index:60;
+    display:flex;
+    align-items:center;
+    justify-content:space-between;
+    padding:14px clamp(16px,5vw,48px);
+    background:transparent;
+    transition:background .4s ease, box-shadow .4s ease, padding .3s ease;
+  }
+  header.nav.scrolled{
+    background:rgba(247,251,246,.94);
+    backdrop-filter:blur(6px);
+    box-shadow:0 1px 0 var(--paper-line);
+    padding-top:10px;padding-bottom:10px;
+  }
+  .logo{
+    display:flex;
+    align-items:center;
+    gap:10px;
+    font-family:'Shippori Mincho',serif;
+    font-size:clamp(1.05rem,3.6vw,1.35rem);
+    font-weight:700;
+    color:var(--sand-light);
+    transition:color .4s ease;
+    text-decoration:none;
+    white-space:nowrap;
+    flex:none;
+  }
+  .logo-icon{
+    width:clamp(30px,7vw,38px);height:clamp(30px,7vw,38px);
+    border-radius:50%;
+    display:block;
+    flex:none;
+    box-shadow:0 1px 4px rgba(0,0,0,.25);
+  }
+  header.nav.scrolled .logo{color:var(--ink);}
+
+  /* ---------- NAV TABS (in header) ---------- */
+  .nav-tabs{
+    display:flex;
+    align-items:center;
+    gap:8px;
+    overflow-x:auto;
+    -webkit-overflow-scrolling:touch;
+    scrollbar-width:none;
+    flex:1 1 auto;
+    min-width:0;
+    justify-content:flex-end;
+    -webkit-mask-image:linear-gradient(90deg, transparent 0, #000 24px);
+    mask-image:linear-gradient(90deg, transparent 0, #000 24px);
+  }
+  .nav-tabs::-webkit-scrollbar{display:none;}
+  .nav-tabs a{
+    flex:none;
+    display:inline-block;
+    padding:7px 14px;
+    border:1px solid rgba(247,251,246,.5);
+    border-radius:999px;
+    font-size:clamp(.66rem,2.2vw,.78rem);
+    font-weight:700;
+    color:var(--sand-light);
+    text-decoration:none;
+    white-space:nowrap;
+    transition:background .2s ease, color .2s ease, border-color .2s ease;
+  }
+  header.nav.scrolled .nav-tabs a{color:var(--ink-soft);border-color:var(--paper-line);}
+  .nav-tabs a:hover{background:var(--clay);color:#fff !important;border-color:var(--clay) !important;}
+
+  /* ---------- HERO ---------- */
+  .hero{
+    position:relative;
+    height:100svh;
+    min-height:640px;
+    overflow:hidden;
+    background:
+      linear-gradient(180deg, rgba(20,50,60,.4) 0%, rgba(30,70,80,.18) 45%, rgba(10,35,40,.7) 100%),
+      url('./images/hero-tajima.jpg') center 42% / cover no-repeat;
+  }
+  .hero-inner{
+    position:relative;
+    z-index:5;
+    height:100%;
+    display:flex;
+    flex-direction:column;
+    justify-content:center;
+    align-items:center;
+    text-align:center;
+    padding:0 20px;
+    color:var(--sand-light);
+  }
+  .hero-eyebrow{
+    font-size:clamp(.6rem,2.6vw,.78rem);
+    letter-spacing:clamp(.14em,2.6vw,.32em);
+    color:var(--gold);
+    margin-bottom:22px;
+    font-weight:600;
+  }
+  .hero-logo{
+    width:clamp(220px,32vw,420px);
+    height:auto;
+    margin:0 0 24px;
+    filter:drop-shadow(0 4px 20px rgba(0,0,0,.35));
+  }
+  .hero p.tagline{
+    font-size:clamp(1rem,2.4vw,1.3rem);
+    max-width:34em;
+    margin:0 auto;
+    font-weight:400;
+    color:#EAF6FF;
+  }
+  .hero p.tagline strong{
+    color:var(--sand-light);
+    font-weight:700;
+  }
+  .scroll-cue{
+    position:absolute;
+    bottom:28px;left:50%;
+    transform:translateX(-50%);
+    z-index:5;
+    display:flex;flex-direction:column;align-items:center;gap:8px;
+    color:var(--sand-light);
+    opacity:.75;
+    font-size:clamp(.6rem,2vw,.68rem);
+    letter-spacing:clamp(.16em,2vw,.3em);
+  }
+  .scroll-cue .line{
+    width:1px;height:34px;
+    background:linear-gradient(to bottom, currentColor, transparent);
+    animation:scrolldrop 2s ease-in-out infinite;
+  }
+  @keyframes scrolldrop{
+    0%{transform:scaleY(0);transform-origin:top;}
+    50%{transform:scaleY(1);transform-origin:top;}
+    51%{transform:scaleY(1);transform-origin:bottom;}
+    100%{transform:scaleY(0);transform-origin:bottom;}
+  }
+
+  /* ---------- SECTIONS (common) ---------- */
+  section.pad{padding:clamp(64px,10vw,120px) 0;}
+  .reveal{
+    opacity:0;
+    transform:translateY(24px);
+    transition:opacity .8s ease, transform .8s ease;
+  }
+  .reveal.is-visible{opacity:1;transform:translateY(0);}
+
+  /* ---------- WHAT IS ---------- */
+  .whatis{background:var(--sand-light);text-align:left;}
+  .whatis-grid{
+    display:grid;
+    grid-template-columns:auto 1fr;
+    gap:clamp(24px,5vw,52px);
+    align-items:center;
+    margin-top:30px;
+  }
+  @media (max-width:640px){
+    .whatis-grid{grid-template-columns:1fr;text-align:center;}
+    .whatis-logo{justify-self:center;}
+  }
+  .whatis-logo img{
+    width:clamp(96px,16vw,150px);
+    height:clamp(96px,16vw,150px);
+    border-radius:50%;
+    box-shadow:0 4px 18px rgba(31,58,52,.15);
+  }
+  .whatis h2{
+    font-size:clamp(1.35rem,3.8vw,1.9rem);
+    line-height:1.8;
+    margin:0;
+    font-weight:700;
+  }
+  .whatis h2 span{color:var(--clay);}
+  .whatis-origin{
+    margin-top:34px;
+    padding-top:28px;
+    border-top:1px solid var(--paper-line);
+    color:var(--ink-soft);
+    font-size:clamp(.9rem,3.2vw,1rem);
+    max-width:48em;
+  }
+
+  /* ---------- ABOUT ---------- */
+  .lead{text-align:center;}
+  .lead .wrap{max-width:1220px;}
+  .lead-grid{
+    display:grid;
+    grid-template-columns:.85fr 1.15fr;
+    gap:clamp(32px,6vw,64px);
+    align-items:center;
+    text-align:left;
+  }
+  @media (max-width:860px){
+    .lead-grid{grid-template-columns:1fr;}
+    .lead-map{max-width:420px;margin:24px auto 0;}
+  }
+  .lead h2{
+    font-size:clamp(1.55rem,4.8vw,2.75rem);
+    margin:14px 0 28px;
+    font-weight:700;
+  }
+  .lead .body{
+    max-width:42em;
+    margin:0;
+    font-size:clamp(.92rem,3.4vw,1.02rem);
+    color:var(--ink-soft);
+  }
+  .lead .body + .body{margin-top:1.2em;}
+  .lead-map img{width:100%;height:auto;display:block;}
+
+  /* ---------- THOUGHT ---------- */
+  .thought{
+    background:
+      linear-gradient(180deg, rgba(10,25,30,.62) 0%, rgba(10,25,30,.45) 45%, rgba(8,18,22,.72) 100%),
+      url('./images/motivation-bg.jpg') center 45% / cover no-repeat;
+    color:var(--sand-light);
+    text-align:center;
+  }
+  .thought .eyebrow{color:#FFD98A;text-shadow:0 1px 8px rgba(0,0,0,.4);}
+  .thought .headline{
+    font-family:'Shippori Mincho',serif;
+    font-size:clamp(1.8rem,5.4vw,2.7rem);
+    line-height:1.6;
+    margin:18px auto 44px;
+    font-weight:800;
+    text-shadow:0 2px 14px rgba(0,0,0,.5);
+  }
+  .thought .headline mark{
+    background:none;
+    color:var(--sand-light);
+  }
+  .thought .prose{
+    max-width:34em;
+    margin:0 auto;
+    text-align:left;
+  }
+  .thought .prose p{
+    font-size:clamp(.95rem,3.4vw,1.05rem);
+    line-height:2;
+    margin:0 0 1.4em;
+    color:var(--sand-light);
+    text-shadow:0 1px 8px rgba(0,0,0,.4);
+  }
+  .thought .prose p strong{
+    color:var(--gold);
+    font-weight:700;
+  }
+  .thought .prose p.quote{
+    font-family:'Shippori Mincho',serif;
+    font-weight:600;
+    font-size:clamp(1rem,3.6vw,1.12rem);
+    padding-left:18px;
+    border-left:3px solid var(--gold);
+  }
+  .thought .prose p.closing{
+    font-family:'Zen Kaku Gothic New', sans-serif;
+    font-weight:400;
+    color:var(--sand-light);
+    margin-bottom:0;
+  }
+
+  /* ---------- ACTIVITIES ---------- */
+  .activities{background:var(--sand);text-align:center;}
+  .activities h2{
+    font-size:clamp(1.5rem,3.8vw,2.1rem);
+    margin:14px 0 14px;
+    font-weight:700;
+  }
+  .activities .intro{
+    max-width:34em;
+    margin:0 auto 44px;
+    color:var(--ink-soft);
+    font-size:clamp(.92rem,3.4vw,1rem);
+  }
+  .activity-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:22px;
+    text-align:center;
+  }
+  @media (max-width:820px){.activity-grid{grid-template-columns:1fr;}}
+  .activity-card{
+    border:none;
+    border-radius:22px;
+    padding:38px 26px 32px;
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+    box-shadow:0 3px 16px rgba(31,58,52,.08);
+  }
+  .activity-card:nth-child(1){background:#E9F2F7;}
+  .activity-card:nth-child(2){background:#FCEEE5;}
+  .activity-card:nth-child(3){background:#EFF1EA;}
+  .activity-icon-frame{
+    width:clamp(110px,22vw,140px);
+    height:clamp(110px,22vw,140px);
+    border-radius:50%;
+    background:#FFFFFF;
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    margin:0 0 20px;
+    box-shadow:0 3px 10px rgba(31,58,52,.1);
+    overflow:hidden;
+  }
+  .activity-icon{
+    width:100%;height:100%;
+    object-fit:cover;
+  }
+  .activity-tag{
+    font-family:'Shippori Mincho',serif;
+    font-weight:700;
+    font-size:clamp(1.1rem,3.6vw,1.25rem);
+  }
+  .activity-card p{
+    color:var(--ink-soft);
+    font-size:clamp(.86rem,3.2vw,.92rem);
+    margin:10px 0 0;
+    line-height:1.75;
+  }
+  .activity-divider{
+    width:64%;
+    border-top:1px dashed rgba(31,58,52,.25);
+    margin:20px 0;
+  }
+  .activity-benefit{
+    color:var(--ink-soft);
+    font-size:clamp(.82rem,3vw,.88rem);
+    font-weight:700;
+    margin:0 !important;
+    line-height:1.7;
+  }
+
+  /* ---------- MEMBERS ---------- */
+  .members{background:var(--sand-light);text-align:center;}
+  .members h2{
+    font-size:clamp(1.5rem,3.8vw,2.1rem);
+    margin:14px 0 44px;
+    font-weight:700;
+  }
+  .member-grid{
+    display:grid;
+    grid-template-columns:repeat(2,1fr);
+    gap:24px;
+    text-align:left;
+  }
+  @media (max-width:640px){.member-grid{grid-template-columns:1fr;}}
+  .member-card{
+    background:var(--sand-light);
+    border:1px solid var(--paper-line);
+    padding:30px;
+    display:flex;
+    gap:22px;
+    align-items:center;
+  }
+  @media (max-width:480px){.member-card{flex-direction:column;text-align:center;}}
+  .member-tag{
+    font-size:clamp(.62rem,2.4vw,.7rem);
+    letter-spacing:.14em;
+    color:var(--clay);
+    font-weight:700;
+  }
+  .member-avatar{
+    flex:none;
+    width:clamp(108px,26vw,158px);height:clamp(108px,26vw,158px);
+    border-radius:50%;
+    display:block;
+    object-fit:cover;
+    background:var(--moss);
+    border:3px solid var(--sand-light);
+    box-shadow:0 2px 10px rgba(31,58,52,.25);
+  }
+  .member-card:nth-child(2n) .member-avatar{background:var(--sea-mid);}
+  .member-body h3{
+    font-size:clamp(.98rem,3.6vw,1.05rem);
+    margin:2px 0 2px;
+    font-weight:700;
+  }
+  .member-role{
+    font-size:clamp(.74rem,2.8vw,.8rem);
+    color:var(--ink-soft);
+    opacity:.85;
+    margin:0 0 10px;
+  }
+  .member-comment{
+    font-size:clamp(.84rem,3.2vw,.9rem);
+    color:var(--ink-soft);
+    margin:0;
+  }
+  .member-links{
+    display:flex;
+    gap:8px;
+    margin-top:14px;
+  }
+  .member-links a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:32px;height:32px;
+    border-radius:50%;
+    border:1px solid var(--paper-line);
+    color:var(--ink-soft);
+    text-decoration:none;
+    transition:border-color .2s ease, color .2s ease, transform .2s ease;
+  }
+  .member-links a:hover{color:var(--clay);border-color:var(--clay);transform:translateY(-2px);}
+  .member-links svg{width:16px;height:16px;}
+
+  /* ---------- SPONSOR ---------- */
+  .sponsor{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(233,243,229,.93) 0%, rgba(233,243,229,.88) 60%, rgba(233,243,229,.95) 100%),
+      url('./images/sponsor-bg.jpg') center 55% / cover no-repeat;
+    text-align:center;
+  }
+  .sponsor h2{
+    font-size:clamp(1.6rem,4vw,2.3rem);
+    margin:10px 0 18px;
+    font-weight:800;
+    color:var(--ink);
+  }
+  .sponsor .intro{
+    max-width:36em;
+    margin:0 auto 40px;
+    color:var(--ink);
+    font-size:clamp(.92rem,3.4vw,1.02rem);
+    line-height:1.9;
+  }
+  .sponsor-grid{
+    display:grid;
+    grid-template-columns:repeat(3,1fr);
+    gap:20px;
+    text-align:center;
+  }
+  @media (max-width:820px){.sponsor-grid{grid-template-columns:1fr;}}
+  .sponsor-card{
+    background:var(--sand-light);
+    border-radius:16px;
+    padding:34px 26px 30px;
+    box-shadow:0 3px 16px rgba(31,58,52,.08);
+    display:flex;
+    flex-direction:column;
+    align-items:center;
+  }
+  .sponsor-icon-frame{
+    width:96px;height:96px;
+    margin-bottom:18px;
+    object-fit:contain;
+  }
+  .sponsor-card h3{
+    font-size:1.1rem;
+    font-weight:700;
+    margin:0 0 12px;
+  }
+  .sponsor-card p{
+    font-size:.88rem;
+    color:var(--ink-soft);
+    margin:0;
+    line-height:1.75;
+  }
+  .sponsor .note{
+    margin-top:16px;
+    font-size:.85rem;
+    color:var(--ink-soft);
+  }
+
+  /* ---------- CONTACT ---------- */
+  .contact{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(20,40,25,.62) 0%, rgba(20,40,25,.5) 45%, rgba(12,26,16,.72) 100%),
+      url('./images/contact-bg.jpg') center 50% / cover no-repeat;
+    color:var(--sand-light);
+    text-align:center;
+  }
+  .contact h2{
+    font-size:clamp(1.5rem,3.8vw,2.1rem);
+    margin:14px 0 18px;
+    font-weight:700;
+  }
+  .contact p{
+    color:#DFF0DA;
+    max-width:30em;
+    margin:0 auto 32px;
+    font-size:clamp(.92rem,3.4vw,1rem);
+  }
+  .btn{
+    display:inline-block;
+    padding:clamp(11px,3vw,14px) clamp(20px,5vw,30px);
+    text-decoration:none;
+    font-size:clamp(.82rem,3vw,.92rem);
+    font-weight:700;
+    border-radius:var(--radius);
+    border:1px solid currentColor;
+    transition:transform .2s ease, background .2s ease, color .2s ease;
+  }
+  .btn-fill{background:var(--clay);border-color:var(--clay);color:var(--sand-light);}
+  .btn-fill:hover{transform:translateY(-2px);background:var(--clay-dark);}
+  .btn-outline{color:var(--sand-light);}
+  .btn-outline:hover{transform:translateY(-2px);background:rgba(255,255,255,.08);}
+
+  /* ---------- SOCIAL ---------- */
+  .social{
+    position:relative;
+    background:
+      linear-gradient(180deg, rgba(20,30,45,.55) 0%, rgba(20,30,45,.4) 45%, rgba(12,18,28,.72) 100%),
+      url('./images/social-bg.jpg') center 55% / cover no-repeat;
+    color:var(--sand-light);
+    text-align:center;
+  }
+  .social h2{
+    font-size:clamp(1.5rem,3.8vw,2.1rem);
+    margin:14px 0 14px;
+    font-weight:700;
+  }
+  .social p{
+    color:#DCEFFA;
+    max-width:30em;
+    margin:0 auto 32px;
+    font-size:clamp(.92rem,3.4vw,1rem);
+  }
+  .social-links{
+    display:flex;
+    gap:16px;
+    justify-content:center;
+    flex-wrap:wrap;
+  }
+  .social-links a{
+    display:flex;
+    align-items:center;
+    justify-content:center;
+    width:52px;height:52px;
+    border-radius:50%;
+    border:1.5px solid rgba(255,255,255,.4);
+    color:var(--sand-light);
+    text-decoration:none;
+    transition:border-color .2s ease, background .2s ease, transform .2s ease;
+  }
+  .social-links a:hover{border-color:var(--gold);background:rgba(255,255,255,.08);transform:translateY(-3px);}
+  .social-links svg{width:22px;height:22px;}
+
+  footer{
+    background:#123049;
+    color:#AFD4E0;
+    text-align:center;
+    padding:40px 20px 32px;
+    font-size:clamp(.72rem,2.8vw,.8rem);
+  }
+  footer .logo{
+    display:inline-flex;
+    margin-bottom:10px;
+    font-size:clamp(.95rem,3.6vw,1.1rem);
+    color:var(--sand-light);
+    justify-content:center;
+  }
+  footer .logo-icon{width:clamp(28px,7vw,34px);height:clamp(28px,7vw,34px);}
+
+  @media (prefers-reduced-motion: reduce){
+    html{scroll-behavior:auto;}
+    .scroll-cue .line{animation:none;}
+    .reveal{transition:none;opacity:1;transform:none;}
+  }
+</style>
+</head>
+<body>
+
+<header class="nav" id="siteNav">
+  <a href="#" class="logo"><img src="./images/tajimatch-logo.png" alt="たじまっち" class="logo-icon">たじまっち</a>
+  <nav class="nav-tabs" aria-label="ページ内ナビゲーション">
+    <a href="#what-is">たじまっちとは</a>
+    <a href="#about">但馬について</a>
+    <a href="#thought">想い</a>
+    <a href="#activities">発信内容</a>
+    <a href="#members">メンバー</a>
+    <a href="#sponsor">スポンサー</a>
+    <a href="#contact">お問い合わせ</a>
+    <a href="#social">SNS</a>
+  </nav>
+</header>
+
+<!-- ================= HERO ================= -->
+<section class="hero">
+  <div class="hero-inner">
+    <img src="./images/tajimatch-logo-hero.png" alt="たじまっち" class="hero-logo">
+    <div class="hero-eyebrow">TAJIMA QUEST MEDIA / COMMUNITY</div>
+    <p class="tagline">但馬の「面白い」と出会い、<br class="brk">ワクワクする繋がりをマッチングする。</p>
+  </div>
+  <div class="scroll-cue"><span>SCROLL</span><span class="line"></span></div>
+</section>
+
+<!-- ================= WHAT IS ================= -->
+<section id="what-is" class="pad whatis">
+  <div class="wrap reveal">
+    <div class="eyebrow">What is たじまっち</div>
+    <p class="section-title">たじまっちとは</p>
+    <div class="whatis-grid">
+      <div class="whatis-logo"><img src="./images/tajimatch-logo.png" alt="たじまっち"></div>
+      <h2>単なる観光紹介ではなく、<br class="brk">地域の人の想いや活動を<span>「伝える」</span>ローカルメディア</h2>
+    </div>
+    <p class="whatis-origin">「たじまっち」という名前には、但馬(Tajima)で魅力的な人や場所に出会い(Match)、<br class="brk">そこから新しい可能性や繋がりをマッチングしていくという意志を込めています。</p>
+  </div>
+</section>
+
+<!-- ================= ABOUT ================= -->
+<section id="about" class="pad lead">
+  <div class="wrap reveal lead-grid">
+    <div class="lead-text">
+      <div class="eyebrow">About Tajima</div>
+      <p class="section-title">但馬について</p>
+      <h2>兵庫県北部、日本海に面した<br>自然豊かな土地。</h2>
+      <p class="body">但馬は、兵庫県北部に位置し、日本海と豊かな山々に囲まれた自然豊かな地域です。城崎温泉や但馬牛、松葉ガニ、コウノトリなど、豊かな自然が育んだ観光・食・文化が魅力です。</p>
+      <p class="body">たじまっちでは、但馬の面白い人・場所・体験に出会いながら、この魅力が詰まった場所をさまざまな角度から発信します。</p>
+    </div>
+    <div class="lead-map">
+      <img src="./images/tajima-area-map.jpg" alt="兵庫県北部の但馬エリア地図（豊岡市・養父市・朝来市・香美町・新温泉町の3市2町）">
+    </div>
+  </div>
+</section>
+
+<!-- ================= THOUGHT ================= -->
+<section id="thought" class="pad thought">
+  <div class="wrap reveal">
+    <div class="eyebrow">Thought</div>
+    <p class="section-title">想い</p>
+    <h2 class="headline">但馬の魅力に<mark>会いに行く。</mark></h2>
+    <div class="prose">
+      <p>但馬の魅力は「場所」や「モノ」だけではなく、その背景にいる<strong>「人の想いや生き方」</strong>にこそ宿っている。</p>
+      <p class="quote">「場所やモノの紹介だけじゃなく、この地域で頑張っている『人』にスポットライトを当てたい！」</p>
+      <p class="closing">そんな想いから、たじまっちは走り出しています。</p>
+    </div>
+  </div>
+</section>
+
+<!-- ================= ACTIVITIES ================= -->
+<section id="activities" class="pad activities">
+  <div class="wrap reveal">
+    <div class="eyebrow">Activities details</div>
+    <h2>活動内容</h2>
+    <p class="intro">但馬を楽しみながら巡り、地域の魅力を発信していきます。</p>
+    <div class="activity-grid">
+      <div class="activity-card">
+        <div class="activity-icon-frame">
+          <img class="activity-icon" src="./images/icon-video.png" alt="ショート動画">
+        </div>
+        <span class="activity-tag">ショート動画</span>
+        <p>但馬の人・場所・文化を<br>面白く親しみやすく発信</p>
+        <div class="activity-divider"></div>
+        <p class="activity-benefit">拡散されやすく<br>認知を広げる</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon-frame">
+          <img class="activity-icon" src="./images/icon-stories.png" alt="ストーリーズ">
+        </div>
+        <span class="activity-tag">ストーリーズ</span>
+        <p>日常やイベントを<br>リアルタイムに発信</p>
+        <div class="activity-divider"></div>
+        <p class="activity-benefit">質問・アンケートで<br>双方向の交流をつくる</p>
+      </div>
+      <div class="activity-card">
+        <div class="activity-icon-frame">
+          <img class="activity-icon" src="./images/icon-note.png" alt="note記事">
+        </div>
+        <span class="activity-tag">note記事</span>
+        <p>人や活動の背景・思いを<br>丁寧に伝える</p>
+        <div class="activity-divider"></div>
+        <p class="activity-benefit">インタビューやレポートで<br>共感を深める</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= MEMBERS ================= -->
+<section id="members" class="pad members">
+  <div class="wrap reveal">
+    <div class="eyebrow">Who We Are</div>
+    <h2>メンバー紹介</h2>
+    <div class="member-grid">
+      <div class="member-card">
+        <img class="member-avatar" src="./images/member1.png" alt="MEMBER 01">
+        <div class="member-body">
+          <div class="member-tag">MEMBER 01</div>
+          <h3>お名前</h3>
+          <p class="member-role">役割・肩書き</p>
+          <p class="member-comment">ひとことコメントが入ります。但馬への想いや活動のきっかけなどを書きます。</p>
+          <div class="member-links">
+            <a href="#" aria-label="Xをフォローする"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></a>
+            <a href="#" aria-label="Instagramを見る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="noteを読む"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="member-card">
+        <img class="member-avatar" src="./images/member2.png" alt="MEMBER 02">
+        <div class="member-body">
+          <div class="member-tag">MEMBER 02</div>
+          <h3>お名前</h3>
+          <p class="member-role">役割・肩書き</p>
+          <p class="member-comment">ひとことコメントが入ります。但馬への想いや活動のきっかけなどを書きます。</p>
+          <div class="member-links">
+            <a href="#" aria-label="Xをフォローする"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></a>
+            <a href="#" aria-label="Instagramを見る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="noteを読む"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="member-card">
+        <img class="member-avatar" src="./images/member3.png" alt="MEMBER 03">
+        <div class="member-body">
+          <div class="member-tag">MEMBER 03</div>
+          <h3>お名前</h3>
+          <p class="member-role">役割・肩書き</p>
+          <p class="member-comment">ひとことコメントが入ります。但馬への想いや活動のきっかけなどを書きます。</p>
+          <div class="member-links">
+            <a href="#" aria-label="Xをフォローする"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></a>
+            <a href="#" aria-label="Instagramを見る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="noteを読む"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg></a>
+          </div>
+        </div>
+      </div>
+      <div class="member-card">
+        <img class="member-avatar" src="./images/member4.png" alt="MEMBER 04">
+        <div class="member-body">
+          <div class="member-tag">MEMBER 04</div>
+          <h3>お名前</h3>
+          <p class="member-role">役割・肩書き</p>
+          <p class="member-comment">ひとことコメントが入ります。但馬への想いや活動のきっかけなどを書きます。</p>
+          <div class="member-links">
+            <a href="#" aria-label="Xをフォローする"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></a>
+            <a href="#" aria-label="Instagramを見る"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+            <a href="#" aria-label="noteを読む"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg></a>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ================= SPONSOR ================= -->
+<section id="sponsor" class="pad sponsor">
+  <div class="wrap reveal">
+    <div class="eyebrow">Sponsor company</div>
+    <h2>パートナー企業様募集</h2>
+    <p class="intro">但馬の魅力を発信する活動を、一緒に支えてくださる企業様を探しています。<br class="brk">但馬を魅了を発掘し、世界に伝えるメンバーになりませんか？</p>
+    <div class="sponsor-grid">
+      <div class="sponsor-card">
+        <img class="sponsor-icon-frame" src="./images/sponsor-icon-web.png" alt="Web/SNSでの発信">
+        <h3>Web/SNSでの発信</h3>
+        <p>当サイトおよびSNSでのロゴ掲載・紹介記事作成。</p>
+      </div>
+      <div class="sponsor-card">
+        <img class="sponsor-icon-frame" src="./images/sponsor-icon-csr.png" alt="地域貢献・CSR">
+        <h3>地域貢献・CSR</h3>
+        <p>但馬を盛り上げるコミュニティ活動への支援実績として。</p>
+      </div>
+      <div class="sponsor-card">
+        <img class="sponsor-icon-frame" src="./images/sponsor-icon-collab.png" alt="コラボ企画">
+        <h3>コラボ企画</h3>
+        <p>取材記事の作成やイベント共催など、特別なタイアップ企画の実施。</p>
+      </div>
+    </div>
+    <a href="#contact" class="btn btn-fill" style="margin-top:40px;">お問い合わせ</a>
+    <p class="note">※プランの詳細や取材対応など、お気軽にご相談ください。</p>
+  </div>
+</section>
+
+<!-- ================= CONTACT ================= -->
+<section id="contact" class="pad contact">
+  <div class="wrap reveal">
+    <div class="eyebrow" style="color:#C9E8C2;">Contact</div>
+    <h2>お問い合わせ</h2>
+    <p>取材のご依頼、コラボレーションのご相談、たじまっちへのご質問など、お気軽にご連絡ください。</p>
+    <a href="mailto:info@example.com" class="btn btn-fill">お問い合わせはこちら</a>
+  </div>
+</section>
+
+<!-- ================= SOCIAL ================= -->
+<section id="social" class="pad social">
+  <div class="wrap reveal">
+    <div class="eyebrow" style="color:#FFD98A;">Social media</div>
+    <h2>SNSでもたじまっちをチェック</h2>
+    <p>但馬を巡る日々の発信は、SNSからご覧いただけます。</p>
+    <div class="social-links">
+      <a href="#" aria-label="X"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><line x1="4" y1="4" x2="20" y2="20"/><line x1="20" y1="4" x2="4" y2="20"/></svg></a>
+      <a href="#" aria-label="Instagram"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor" stroke="none"/></svg></a>
+      <a href="#" aria-label="TikTok"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 4v10.5a3.5 3.5 0 1 1-3-3.46"/><path d="M14 4c0 2.5 2 4.5 4.5 4.5"/></svg></a>
+      <a href="#" aria-label="note"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 3h7v7"/><path d="M21 3l-9 9"/><path d="M21 14v5a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V7a2 2 0 0 1 2-2h5"/></svg></a>
+    </div>
+  </div>
+</section>
+
+<footer>
+  <div class="logo"><img src="./images/tajimatch-logo.png" alt="たじまっち" class="logo-icon">たじまっち</div>
+  <div>但馬の人・場所・体験に出会う、地域クエスト型メディア／コミュニティ</div>
+</footer>
+
+<script>
+  const nav = document.getElementById('siteNav');
+  const onScroll = () => {
+    if (window.scrollY > 40) nav.classList.add('scrolled');
+    else nav.classList.remove('scrolled');
+  };
+  document.addEventListener('scroll', onScroll, { passive: true });
+  onScroll();
+
+  const revealEls = document.querySelectorAll('.reveal');
+  if ('IntersectionObserver' in window) {
+    const io = new IntersectionObserver((entries) => {
+      entries.forEach(entry => {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+    revealEls.forEach(el => io.observe(el));
+  } else {
+    revealEls.forEach(el => el.classList.add('is-visible'));
+  }
+</script>
+
+</body>
+</html>
